@@ -73,8 +73,20 @@ public class FetchJokesService extends IntentService {
             jokeText = api.getJoke().execute().getData();
             Intent i = new Intent(ACTION_FETCH_JOKE_READY);
             i.putExtra(JOKE_TEXT, jokeText);
+
+            // simulate network latency
+            // delay(5000);
+
             sendBroadcast(i);
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void delay(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

@@ -1,5 +1,6 @@
 package com.udacity.gradle.builditbigger;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +17,6 @@ import com.google.android.gms.ads.AdView;
 
 import xyz.tripcannon.jokesdisplay.JokesDisplayActivity;
 
-
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -24,6 +24,8 @@ public class MainActivityFragment extends Fragment {
 
     private static final int REQUEST_CODE_FETCH_JOKE = 1337;
     IntentFilter filter = new IntentFilter(FetchJokesService.ACTION_FETCH_JOKE_READY);
+    private View mRoot = null;
+    private Dialog loadingIndicator = null;
     BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -32,7 +34,6 @@ public class MainActivityFragment extends Fragment {
             }
         }
     };
-    private View mRoot;
 
     public MainActivityFragment() {
     }
@@ -71,10 +72,21 @@ public class MainActivityFragment extends Fragment {
     }
 
     public void fetchJoke() {
+        if (loadingIndicator == null) {
+            loadingIndicator = new Dialog(getContext());
+            loadingIndicator.setTitle(R.string.loading_indicator);
+            loadingIndicator.setContentView(R.layout.progress_view);
+        }
+        loadingIndicator.show();
+
         FetchJokesService.startActionFetchJoke(getContext());
     }
 
     public void tellJoke(String jokeText) {
+        if (loadingIndicator != null) {
+            loadingIndicator.dismiss();
+        }
+
         Intent i = new Intent(getContext(), JokesDisplayActivity.class);
         i.putExtra(JokesDisplayActivity.KEY_JOKE_TO_DISPLAY, jokeText);
         startActivity(i);
