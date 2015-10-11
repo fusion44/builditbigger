@@ -1,6 +1,9 @@
 package com.udacity.gradle.builditbigger;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,7 +14,6 @@ import android.widget.Button;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
-import xyz.tripcannon.jokes.JokesRepository;
 import xyz.tripcannon.jokesdisplay.JokesDisplayActivity;
 
 
@@ -20,9 +22,29 @@ import xyz.tripcannon.jokesdisplay.JokesDisplayActivity;
  */
 public class MainActivityFragment extends Fragment {
 
+    private static final int REQUEST_CODE_FETCH_JOKE = 1337;
+    IntentFilter filter = new IntentFilter(FetchJokesService.ACTION_FETCH_JOKE_READY);
+    BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(FetchJokesService.ACTION_FETCH_JOKE_READY)) {
+                tellJoke(intent.getStringExtra(FetchJokesService.JOKE_TEXT));
+            }
+        }
+    };
     private View mRoot;
 
     public MainActivityFragment() {
+    }
+
+    @Override public void onResume() {
+        getActivity().registerReceiver(receiver, filter);
+        super.onResume();
+    }
+
+    @Override public void onPause() {
+        getActivity().unregisterReceiver(receiver);
+        super.onPause();
     }
 
     @Override
@@ -33,7 +55,7 @@ public class MainActivityFragment extends Fragment {
         Button tellJokeBtn = (Button) mRoot.findViewById(R.id.tellJokeButton);
         tellJokeBtn.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                tellJoke();
+                fetchJoke();
             }
         });
 
@@ -48,9 +70,13 @@ public class MainActivityFragment extends Fragment {
         return mRoot;
     }
 
-    public void tellJoke() {
+    public void fetchJoke() {
+        FetchJokesService.startActionFetchJoke(getContext());
+    }
+
+    public void tellJoke(String jokeText) {
         Intent i = new Intent(getContext(), JokesDisplayActivity.class);
-        i.putExtra(JokesDisplayActivity.KEY_JOKE_TO_DISPLAY, JokesRepository.getJoke());
+        i.putExtra(JokesDisplayActivity.KEY_JOKE_TO_DISPLAY, jokeText);
         startActivity(i);
     }
 

@@ -3,15 +3,15 @@ package xyz.tripcannon.backend;
 /**
  * The object model for the data we are sending through endpoints
  */
-public class MyBean {
+public class Joke {
 
-    private String myData;
+    private String jokeData;
 
     public String getData() {
-        return myData;
+        return jokeData;
     }
 
     public void setData(String data) {
-        myData = data;
+        jokeData = data;
     }
 }
