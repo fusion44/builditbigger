@@ -58,7 +58,7 @@ public class FetchJokesService extends IntentService {
         if (api == null) {
             MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
-                    .setRootUrl("http://10.0.3.2:8080/_ah/api/")
+                    .setRootUrl(getString(R.string.jokes_service_url))
                     .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
                         @Override
                         public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {

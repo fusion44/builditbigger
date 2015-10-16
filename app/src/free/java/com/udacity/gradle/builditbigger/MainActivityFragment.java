@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,7 @@ import xyz.tripcannon.jokesdisplay.JokesDisplayActivity;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment {
+public class MainActivityFragment extends Fragment implements FetchJokesAsyncTask.JokeListener {
 
     private static final int REQUEST_CODE_FETCH_JOKE = 1337;
     IntentFilter filter = new IntentFilter(FetchJokesService.ACTION_FETCH_JOKE_READY);
@@ -103,7 +104,9 @@ public class MainActivityFragment extends Fragment {
         }
         loadingIndicator.show();
 
-        FetchJokesService.startActionFetchJoke(getContext());
+        //FetchJokesService.startActionFetchJoke(getContext());
+        new FetchJokesAsyncTask().execute(
+                new Pair<FetchJokesAsyncTask.JokeListener, Context>(this, getContext()));
     }
 
     public void showAd(String jokeText) {
@@ -124,4 +127,7 @@ public class MainActivityFragment extends Fragment {
         startActivity(i);
     }
 
+    @Override public void onFinished(String joke) {
+        showAd(joke);
+    }
 }
