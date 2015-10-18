@@ -71,7 +71,8 @@ public class MainActivityFragment extends Fragment implements FetchJokesAsyncTas
 
         //FetchJokesService.startActionFetchJoke(getContext());
         new FetchJokesAsyncTask().execute(
-                new Pair<FetchJokesAsyncTask.JokeListener, Context>(this, getContext()));
+                new Pair<FetchJokesAsyncTask.JokeListener, String>(
+                        this, getString(R.string.jokes_service_url)));
     }
 
     public void tellJoke(String jokeText) {

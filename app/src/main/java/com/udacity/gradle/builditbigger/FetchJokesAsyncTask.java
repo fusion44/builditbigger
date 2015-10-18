@@ -13,22 +13,22 @@ import java.io.IOException;
 
 import xyz.tripcannon.backend.myApi.MyApi;
 
-class FetchJokesAsyncTask extends AsyncTask<Pair<FetchJokesAsyncTask.JokeListener, Context>, Void, String> {
+class FetchJokesAsyncTask extends AsyncTask<Pair<FetchJokesAsyncTask.JokeListener, String>, Void, String> {
     private MyApi myApiService = null;
     private JokeListener listener;
 
     @SafeVarargs @Override
-    protected final String doInBackground(Pair<JokeListener, Context>... params) {
+    protected final String doInBackground(Pair<JokeListener, String>... params) {
         if (myApiService == null) {  // Only do this once
             listener = params[0].first;
-            Context context = params[0].second;
+            String url = params[0].second;
 
             MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
                     // options for running against local devappserver
                     // - 10.0.2.2 is localhost's IP address in Android emulator
                     // - turn off compression when running against local devappserver
-                    .setRootUrl(context.getString(R.string.jokes_service_url))
+                    .setRootUrl(url)
                     .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
                         @Override
                         public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
