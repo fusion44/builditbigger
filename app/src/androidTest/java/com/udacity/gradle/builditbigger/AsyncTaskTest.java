@@ -1,7 +1,7 @@
 package com.udacity.gradle.builditbigger;
 
-import android.support.v4.util.Pair;
 import android.test.InstrumentationTestCase;
+import android.util.Pair;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -11,6 +11,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class AsyncTaskTest extends InstrumentationTestCase {
     private static String joke;
+
+    //private static String SERVER_IP = "http://10.0.3.2:8080/_ah/api/"; // Genymotion
+    private static String SERVER_IP = "http://10.0.2.2:8080/_ah/api/"; // Android emulator
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -35,7 +38,7 @@ public class AsyncTaskTest extends InstrumentationTestCase {
                                 joke = fin_joke;
                             }
                         },
-                        "http://10.0.3.2:8080/_ah/api/"
+                        SERVER_IP
                 ));
             }
         });
@@ -44,6 +47,6 @@ public class AsyncTaskTest extends InstrumentationTestCase {
          * above with the countDown() or 30 seconds passes and it times out.
 	     */
         signal.await(5, TimeUnit.SECONDS);
-        assertEquals(joke, "Put funny joke here!");
+        assertEquals("Put funny joke here!", joke);
     }
 }
