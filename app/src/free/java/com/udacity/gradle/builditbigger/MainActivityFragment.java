@@ -18,6 +18,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 
+import java.lang.String;
+
 import xyz.tripcannon.jokesdisplay.JokesDisplayActivity;
 
 /**
@@ -106,7 +108,8 @@ public class MainActivityFragment extends Fragment implements FetchJokesAsyncTas
 
         //FetchJokesService.startActionFetchJoke(getContext());
         new FetchJokesAsyncTask().execute(
-                new Pair<FetchJokesAsyncTask.JokeListener, Context>(this, getContext()));
+                new Pair<FetchJokesAsyncTask.JokeListener, String>(
+                        this, getString(R.string.jokes_service_url)));
     }
 
     public void showAd(String jokeText) {
