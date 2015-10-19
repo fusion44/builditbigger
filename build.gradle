@@ -17,3 +17,22 @@ allprojects {
         jcenter()
     }
 }
+
+// https://docs.gradle.org/current/userguide/multi_project_builds.html
+evaluationDependsOn ":backend"
+evaluationDependsOn ":app"
+
+project(":backend"){
+    appengine{
+        daemon true
+    }
+}
+
+tasks.getByPath(":app:connectedCheck").mustRunAfter tasks.getByPath(":backend:appengineRun")
+
+task testWithAppengineDevServer() {
+    description 'Run Android tests while AppEngine Dev Server runs'
+
+    dependsOn ":backend:appengineRun", "app:connectedCheck"
+    finalizedBy "backend:appengineStop"
+}
